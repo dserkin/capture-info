@@ -63,10 +63,10 @@ for device in devices {
     for format in device.formats {
         switch format.mediaType {
         case AVMediaType.video:
-            var vfi = getVideoFormatInfo(format: format)
+            let vfi = getVideoFormatInfo(format: format)
             videoFormats.append(vfi)
         case AVMediaType.audio:
-            var afi = getAudioFormatInfo(format: format)
+            let afi = getAudioFormatInfo(format: format)
             audioFormats.append(afi)
         default:
             print("unsupported format detected")
@@ -85,14 +85,12 @@ for device in devices {
 let encoder = JSONEncoder()
 encoder.outputFormatting = .prettyPrinted
 
-if deviceName.value != nil {
-	var item = items.filter{$0.name == deviceName.value}
-	let json = try encoder.encode(item)
-	print(String(data: json, encoding: .utf8)!)
-} else {
-	let json = try encoder.encode(items)
-	print(String(data: json, encoding: .utf8)!)	
-}
+var json: Data
+deviceName.value != nil ?
+      (json = try encoder.encode(items.filter{$0.name == deviceName.value})) : (json = try encoder.encode(items))
+
+print(String(data: json, encoding: .utf8)!)
+
 
 
 
