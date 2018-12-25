@@ -20,7 +20,7 @@ struct DeviceItem : Codable {
     var audioFormats: [DeviceAudioFormat]? = []
 }
 
-func getVideoFormatInfo(format: AVCaptureDevice.Format, isActive: Bool) -> DeviceVideoFormat {
+func getVideoFormatInfo(format: AVCaptureDevice.Format) -> DeviceVideoFormat {
     let videoDimensions = CMVideoFormatDescriptionGetDimensions(format.formatDescription)
     
     let framerateRanges = format.videoSupportedFrameRateRanges;
@@ -29,13 +29,13 @@ func getVideoFormatInfo(format: AVCaptureDevice.Format, isActive: Bool) -> Devic
         framerates.append(Int(range.maxFrameRate))
     }
     
-    return DeviceVideoFormat(width: videoDimensions.width, height: videoDimensions.height, framerates: framerates, active: isActive)
+    return DeviceVideoFormat(width: videoDimensions.width, height: videoDimensions.height, framerates: framerates)
 }
 
-func getAudioFormatInfo(format: AVCaptureDevice.Format, isActive: Bool) -> DeviceAudioFormat {
+func getAudioFormatInfo(format: AVCaptureDevice.Format) -> DeviceAudioFormat {
     let asbd = CMAudioFormatDescriptionGetStreamBasicDescription(format.formatDescription)
     if let asbd = asbd?.pointee {
-        return DeviceAudioFormat(sampleRate: asbd.mSampleRate, active: isActive)
+        return DeviceAudioFormat(sampleRate: asbd.mSampleRate)
     }
     
     return DeviceAudioFormat()
@@ -63,10 +63,10 @@ for device in devices {
     for format in device.formats {
         switch format.mediaType {
         case AVMediaType.video:
-            var vfi = getVideoFormatInfo(format: format, isActive: isActive)
+            var vfi = getVideoFormatInfo(format: format)
             videoFormats.append(vfi)
         case AVMediaType.audio:
-            var afi = getAudioFormatInfo(format: format, isActive: isActive)
+            var afi = getAudioFormatInfo(format: format)
             audioFormats.append(afi)
         default:
             print("unsupported format detected")
