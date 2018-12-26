@@ -5,7 +5,7 @@ import CommandLineKit
 struct DeviceVideoFormat : Codable {
     var width: Int32 = 0
     var height: Int32 = 0
-    var framerates: [Int] = []
+    var framerates: [Float64] = []
 }
 
 struct DeviceAudioFormat : Codable {
@@ -24,9 +24,10 @@ func getVideoFormatInfo(format: AVCaptureDevice.Format) -> DeviceVideoFormat {
     let videoDimensions = CMVideoFormatDescriptionGetDimensions(format.formatDescription)
     
     let framerateRanges = format.videoSupportedFrameRateRanges;
-    var framerates: [Int] = []
+    var framerates: [Float64] = []
     for range in framerateRanges {
-        framerates.append(Int(range.maxFrameRate))
+        print(range.minFrameRate, range.maxFrameRate)
+        framerates.append(range.maxFrameRate)
     }
     
     return DeviceVideoFormat(width: videoDimensions.width, height: videoDimensions.height, framerates: framerates)
