@@ -26,7 +26,6 @@ func getVideoFormatInfo(format: AVCaptureDevice.Format) -> DeviceVideoFormat {
     let framerateRanges = format.videoSupportedFrameRateRanges;
     var framerates: [Float64] = []
     for range in framerateRanges {
-        print(range.minFrameRate, range.maxFrameRate)
         framerates.append(range.maxFrameRate)
     }
     
